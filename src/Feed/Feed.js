@@ -3,14 +3,17 @@ import './Feed.css';
 import Post from './Post/Post';
 import TweetBox from './TweetBox/TweetBox';
 import db from '../firebase';
+import FlipMove from 'react-flip-move';
 
 function Feed() {
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {
-        db.collection('posts').onSnapshot(snapshot => (
-            setPosts(snapshot.docs.map(doc => doc.data()))
-        ))
+        db.collection('posts')
+          .orderBy('timestamp', 'desc')
+          .onSnapshot((snapshot) => 
+            setPosts(snapshot.docs.map((doc) => doc.data()))
+        );
     }, []);
 
     return (
@@ -23,17 +26,21 @@ function Feed() {
             <TweetBox />
 
             {/*AudioBox*/}
-
-            {posts.map(post => (
+            <FlipMove>
+            {posts.map(post => {
+                return(
                 <Post 
-                displayName={post.displayName}
-                userName={post.userName}
-                verified={post.verified}
-                text={post.text}
-                avatar={post.avatar}
-                image={post.image}/>
-            ))}
-            
+                    key={post.text}
+                    displayName={post.displayName}
+                    userName={post.userName}
+                    verified={post.verified}
+                    text={post.text}
+                    avatar={post.avatar}
+                    image={post.image}
+                    timestamp={post.timestamp ? post.timestamp.toDate().toISOString() : ''}/>)
+
+                })}
+            </FlipMove>
             {/* <Post />
             <Post />
             <Post />
