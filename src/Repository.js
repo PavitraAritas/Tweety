@@ -1,4 +1,4 @@
-import { db } from "./firebase";
+import { db, auth} from "./firebase";
 import firebase from "firebase";
 
 function fetchTweets() {
@@ -22,4 +22,24 @@ function sendTweet(tweetMessage, tweetImage) {
     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
   });
 }
-export { fetchTweets, sendTweet };
+
+function signUp(email,username, password){
+  auth
+  .createUserWithEmailAndPassword(email, password)
+  .then((authUser) => {
+    return authUser.user.updateProfile({
+      displayName: username
+    })
+  })
+  .catch((error) => alert(error.message));
+
+};
+
+function signIn(email, password) {
+  auth
+  .signInWithEmailAndPassword(email, password)
+  .catch((error) => alert(error.message))
+
+}
+export { fetchTweets, sendTweet, signUp, signIn };
+
