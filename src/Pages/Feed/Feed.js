@@ -1,11 +1,12 @@
 import { useContext } from "react";
 
 import "./Feed.css";
-import Post from "../../Components/Post/Post";
+//import Post from "../../Components/Post/Post";
 import TweetBox from "../../Components/TweetBox/TweetBox";
-import FlipMove from "react-flip-move";
+//import FlipMove from "react-flip-move";
 import useFeed from "../../hooks/useFeed";
 import RepositoryContext from "../../Context/RepositoryContext";
+import TweetList from "../../Components/TweetList/TweetList";
 
 function Feed() {
   const { feedTweets } = useFeed();
@@ -25,24 +26,8 @@ function Feed() {
       />
 
       {/*AudioBox*/}
-      <FlipMove>
-        {feedTweets.map((post) => {
-          return (
-            <Post
-              key={post.text}
-              displayName={post.displayName}
-              userName={post.userName}
-              verified={post.verified}
-              text={post.text}
-              avatar={post.avatar}
-              image={post.image}
-              timestamp={
-                post.timestamp ? post.timestamp.toDate().toISOString() : ""
-              }
-            />
-          );
-        })}
-      </FlipMove>
+      <TweetList
+       feedTweets={feedTweets}/>
       {/* <Post />
             <Post />
             <Post />

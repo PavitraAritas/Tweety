@@ -14,7 +14,7 @@ export default function useFeed() {
     .onSnapshot((snapshot) => setFeedTweets(snapshot.docs.map((doc) => doc.data())));
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [feedTweets]);
+  }, []);
 
-  return { feedTweets};
+  return {feedTweets};
 }

@@ -1,0 +1,54 @@
+.profile{
+    flex: 0.6;
+    border-radius: 1px solid var(--twitter-background);
+    min-width: fit-content;
+    /* overflow-y: scroll; */
+}
+
+.profile::-webkit-scrollbar {
+    display: none;
+}
+
+.profile__header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: white;
+    border: 1px solid var(--twitter-background);
+    padding-left: 10px;
+}
+
+.profile__banner {
+    border-bottom: 8px solid var(--twitter-background);
+    padding-right: 10px;
+}
+
+.profile__nav{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: white;
+}
+
+.profile__nav li {
+    flex: 1;
+    display: block;
+    color: black;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+.profile__nav li:hover {
+    background-color: rgb(214, 209, 209);
+}
+
+.profile__avatar {
+    position: absolute;
+    z-index: 100;
+}
