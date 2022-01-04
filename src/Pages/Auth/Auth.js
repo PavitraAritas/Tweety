@@ -8,15 +8,16 @@ function Auth() {
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [name, setName] = useState('');
     const [isSignin, setisSignin] = useState(false);
-    const { repository } = useContext(RepositoryContext)
+    const { repository } = useContext(RepositoryContext); 
 
     const onSubmit = () => {
         if(isSignin) {
             repository.signIn(email, password)
         }
         else{
-            repository.signUp(email, username, password)
+            repository.signUp(email, username, password, name)
         }
     }
 
@@ -32,13 +33,14 @@ function Auth() {
                     <h1 style={{fontSize: '50px', fontFamily: 'Verdana, Geneva, Tahoma, sans-serif', marginTop: '20px'}}>Happening now</h1>
                     <h2 style={{marginTop: '40px', }}>Join Twitter Today.</h2>
                     {isSignin && (
-                    <div>
+                    <div style={{display:'flex', flexDirection: 'column'}}>
                         < AuthInput type="text" value={email} placeholder='email' onChange={(e) => setEmail(e.target.value)}/>
                         < AuthInput type="password" value={password} placeholder='password' onChange={(e) => setPassword(e.target.value)}/>
                         </div>)}
                     {!isSignin && (
-                    <div>
+                    <div style={{display:'flex', flexDirection: 'column'}}>
                         < AuthInput type="text" value={username} placeholder='username' onChange={(e) => setUsername(e.target.value)}/>
+                        < AuthInput type="text" value={name} placeholder='name' onChange={(e) => setName(e.target.value)}/>
                         < AuthInput type="text" value={email} placeholder='email' onChange={(e) => setEmail(e.target.value)}/>
                         < AuthInput type="password" value={password} placeholder='password' onChange={(e) => setPassword(e.target.value)}/>
                     </div>

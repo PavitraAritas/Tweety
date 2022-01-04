@@ -20,8 +20,8 @@ function Feed() {
 
       {/*Tweetbox*/}
       <TweetBox
-        sendTweetCB={(tweetMessage, tweetImage) =>
-          repository.sendTweet(tweetMessage, tweetImage)
+        sendTweetCB={(tweetMessage, image) =>
+          repository.sendTweet(tweetMessage, image)
         }
       />
 
