@@ -9,7 +9,7 @@ import "./Post.css";
 
 const Post = forwardRef(
   (
-    { displayName, userName, timestamp, verified, avatar, text, image },
+    { displayName, userName, timestamp, verified, avatar, text, image },  
     ref
   ) => {
     return (

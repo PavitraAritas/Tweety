@@ -27,7 +27,7 @@ function App() {
               <Route path="/messages">Messages</Route>
               <Route path="/bookmarks">Bookmarks</Route>
               <Route path="/lists">Lists</Route>
-              <Route path="/profile" component={Profile} />
+              <Route path="/profile"><Profile currentUser={user}/></Route>
               <Widgets />
             </div>
           </Fragment>

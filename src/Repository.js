@@ -35,8 +35,9 @@ async function sendTweet(tweetMessage, tweetImage) {
 
 async function signUp(email, username, password, name) {
   try {
-    await auth.createUserWithEmailAndPassword(email, password);
-    await createProfile(username, email, name);
+    const authUser = await auth.createUserWithEmailAndPassword(email, password);
+    console.log(authUser);
+    await createProfile(username, email, name, authUser.user.uid);
   } catch (error) {
     alert(error.message);
   }
@@ -59,9 +60,10 @@ async function handleUpload(image) {
   }
 }
 
-async function createProfile(username, email, name) {
-  try { 
-    let self = await db.collection("users").add({  
+async function createProfile(username, email, name, userId) {
+  try {
+    let self = await db.collection("users").doc(userId).set({
+      userId: userId,
       name: name,
       userName: username,
       email: email,
@@ -78,4 +80,21 @@ async function signOut() {
   await auth.signOut();
 }
 
-export { fetchTweets, sendTweet, signUp, signIn, createProfile, signOut };
+async function getUser(userId) {
+  try {
+    let user = await db.collection("users").doc(userId).get();
+    return user.data();
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
+export {
+  fetchTweets,
+  sendTweet,
+  signUp,
+  signIn,
+  createProfile,
+  signOut,
+  getUser,
+};
