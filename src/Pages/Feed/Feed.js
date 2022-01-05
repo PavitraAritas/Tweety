@@ -7,10 +7,12 @@ import TweetBox from "../../Components/TweetBox/TweetBox";
 import useFeed from "../../hooks/useFeed";
 import RepositoryContext from "../../Context/RepositoryContext";
 import TweetList from "../../Components/TweetList/TweetList";
+import useProfile from "../../hooks/useProfile";
 
-function Feed() {
+function Feed({currentUser}) {
   const { feedTweets } = useFeed();
   const { repository } = useContext(RepositoryContext);
+  const { user } = useProfile(currentUser.uid);
 
   return (
     <div className="feed">
@@ -21,7 +23,7 @@ function Feed() {
       {/*Tweetbox*/}
       <TweetBox
         sendTweetCB={(tweetMessage, image) =>
-          repository.sendTweet(tweetMessage, image)
+          repository.sendTweet(tweetMessage, image, user.userName, user.name, user.userId, user.avatar)
         }
       />
 

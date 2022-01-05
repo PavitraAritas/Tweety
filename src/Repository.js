@@ -12,7 +12,7 @@ function fetchTweets() {
   return tweets;
 }
 
-async function sendTweet(tweetMessage, tweetImage) {
+async function sendTweet(tweetMessage, tweetImage, userName, name, userId, avatar) {
   console.log("send tweet called");
   let imageURL;
   if (tweetImage) {
@@ -22,13 +22,13 @@ async function sendTweet(tweetMessage, tweetImage) {
     imageURL = "";
   }
   await db.collection("posts").add({
-    displayName: "Sylvester Stone",
-    userName: "stonned",
+    displayName: name,
+    userName: userName,
     verified: true,
     text: tweetMessage,
     image: imageURL,
-    avatar:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU",
+    avatar: avatar,
+    userId: userId,
     timestamp: firebase.firestore.FieldValue.serverTimestamp(),
   });
 }
@@ -60,13 +60,14 @@ async function handleUpload(image) {
   }
 }
 
-async function createProfile(username, email, name, userId) {
+async function createProfile(username, email, name, userId, avatar) {
   try {
     let self = await db.collection("users").doc(userId).set({
       userId: userId,
       name: name,
       userName: username,
       email: email,
+      avatar: avatar,
       verified: true,
       joinDate: firebase.firestore.FieldValue.serverTimestamp(),
     });
@@ -85,7 +86,7 @@ async function getUser(userId) {
     let user = await db.collection("users").doc(userId).get();
     return user.data();
   } catch (error) {
-    alert(error.message);
+    alert(error.message); //catch is used to catch exceptions
   }
 }
 

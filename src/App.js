@@ -21,7 +21,7 @@ function App() {
           <Fragment>
             <div className="app">
               <Sidebar />
-              <Route path="/" component={Feed} exact />
+              <Route path="/" exact><Feed currentUser={user}/></Route>
               <Route path="/explore" />
               <Route path="/notifications">Notifications</Route>
               <Route path="/messages">Messages</Route>

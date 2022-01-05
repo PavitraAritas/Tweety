@@ -1,4 +1,4 @@
-import { Avatar } from "@material-ui/core";
+import { Avatar, Button, Modal } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
@@ -12,10 +12,19 @@ function Profile({ currentUser }) {
   const [activeTab, setactiveTab] = useState(0);
   const tabLabels = ["Tweets", "Tweets & Replies", "Media", "Likes"];
   const { user } = useProfile(currentUser.uid);
+  const [open, setOpen] = useState(false);
 
   if (user == null) {
     return <div>Loading</div>;
   }
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <div className="profile">
@@ -33,25 +42,70 @@ function Profile({ currentUser }) {
           <div style={{ fontSize: "12px", color: "gray" }}>100 tweets</div>
         </div>
       </div>
+      <div >
+      <Avatar
+            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU"
+            className="profile__avatar"
+            style={{
+              width: "90px",
+              height: "90px",
+              borderRadius: "50px",
+              border: "5px solid white",
+              position: "relative"
+            }}
+        />
       <div className="profile__banner">
-        <div style={{ position: "relative" }}>
-          <AddAPhotoOutlinedIcon />
-          <img
-            src="https://pbs.twimg.com/profile_banners/734289142570307585/1612156103/600x200"
-            alt="banner"
-          />
-        </div>
-        <div style={{ height: 60 }}>
-          <div className="profile__avatar">
-            <Avatar
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU"
-              sx={{ width: 100, height: 100 }}
+        <div >
+          <div>
+            <img
+              src="https://pbs.twimg.com/profile_banners/734289142570307585/1612156103/600x200"
+              alt="banner"
             />
           </div>
         </div>
         <div style={{ paddingLeft: "4px" }}>
-          <div style={{ fontSize: "20px", fontWeight: "bold" }}>
+          <div
+            style={{
+              fontSize: "20px",
+              fontWeight: "bold",
+              display: "flex",
+              justifyContent: "space-between",
+            }}
+          >
             <span>{user.name}</span>
+            <Button class="profile__editButton" onClick={handleOpen}>
+              Edit profile
+            </Button>
+            <Modal
+              open={open}
+              onClose={handleClose}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflowX: "auto",
+              }}
+              // aria-labelledby="simple-modal-title"
+              // aria-describedby="simple-modal-description"
+            >
+              <div className="profile__modal">
+                <AddAPhotoOutlinedIcon
+                  className="profile__addImageButton"
+                  style={{ width: "40px", height: "40px" }}
+                />
+                <div style={{ backgroundColor: "black", borderRadius: "20px" }}>
+                  <img
+                    src="https://pbs.twimg.com/profile_banners/734289142570307585/1612156103/600x200"
+                    alt="banner"
+                    style={{
+                      width: "100%",
+                      borderRadius: "20px",
+                      opacity: "0.5",
+                    }}
+                  />
+                </div>
+              </div>
+            </Modal>
           </div>
           <div
             style={{
@@ -106,6 +160,7 @@ function Profile({ currentUser }) {
             </li>
           ))}
         </ul>
+      </div>
       </div>
       {tabs[activeTab]}
     </div>
