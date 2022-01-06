@@ -1,5 +1,6 @@
 import { db, auth, storage } from "./firebase";
 import firebase from "firebase";
+import { v4 as uuidv4 } from "uuid";
 
 function fetchTweets() {
   let tweets = [];
@@ -12,7 +13,15 @@ function fetchTweets() {
   return tweets;
 }
 
-async function sendTweet(tweetMessage, tweetImage, userName, name, userId, avatar) {
+async function sendTweet(
+  tweetMessage,
+  tweetImage,
+  userName,
+  name,
+  userId,
+  avatar
+) {
+  let tweetId = uuidv4();
   console.log("send tweet called");
   let imageURL;
   if (tweetImage) {
@@ -21,7 +30,8 @@ async function sendTweet(tweetMessage, tweetImage, userName, name, userId, avata
   if (!imageURL) {
     imageURL = "";
   }
-  await db.collection("posts").add({
+  await db.collection("tweets").doc(tweetId).set({
+    tweetId: tweetId,
     displayName: name,
     userName: userName,
     verified: true,
@@ -90,6 +100,28 @@ async function getUser(userId) {
   }
 }
 
+async function tweetComment(comment, username, tweetId, avatar, name, userId) {
+  try {
+    let commentId = uuidv4();
+    await db
+      .collection("tweets")
+      .doc(tweetId)
+      .collection("comments")
+      .doc(commentId)
+      .set({
+        text: comment,
+        userName: username,
+        commentId: commentId,
+        avatar: avatar,
+        displayName: name,
+        userId: userId,
+        timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      });
+  } catch (error) {
+    alert(error.message);
+  }
+}
+
 export {
   fetchTweets,
   sendTweet,
@@ -98,4 +130,5 @@ export {
   createProfile,
   signOut,
   getUser,
+  tweetComment,
 };
