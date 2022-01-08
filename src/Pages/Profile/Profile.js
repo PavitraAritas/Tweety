@@ -2,7 +2,7 @@ import { Avatar, Button, Modal } from "@material-ui/core";
 import React, { useState } from "react";
 import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
-import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
+// import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
 import TweetList from "../../Components/TweetList/TweetList";
 import useFeed from "../../hooks/useFeed";
 import useProfile from "../../hooks/useProfile";

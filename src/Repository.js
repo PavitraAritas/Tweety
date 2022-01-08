@@ -104,7 +104,7 @@ async function tweetComment(comment, username, tweetId, avatar, name, userId) {
   try {
     let commentId = uuidv4();
     await db
-      .collection("tweets")
+      .collection("tweetCollection")
       .doc(tweetId)
       .collection("comments")
       .doc(commentId)
