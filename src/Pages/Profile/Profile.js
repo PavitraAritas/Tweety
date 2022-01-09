@@ -11,7 +11,7 @@ import Typography from "@mui/material/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 
 function Profile({ currentUser }) {
-  const tabs = [<TweetTab />];
+  const tabs = [<TweetTab userId={currentUser.uid}/>];
   const [activeTab, setactiveTab] = useState(0);
   const tabLabels = ["Tweets", "Tweets & Replies", "Media", "Likes"];
   const { user } = useProfile(currentUser.uid);
@@ -41,7 +41,7 @@ function Profile({ currentUser }) {
     pl: 0,
     borderRadius: "20px",
     overflowY: "scroll",
-    height: 400,
+    height: 600,
   };
 
   return (
@@ -138,13 +138,13 @@ function Profile({ currentUser }) {
                       src="https://pbs.twimg.com/profile_banners/734289142570307585/1612156103/600x200"
                       alt="banner"
                     />
-                    <Avatar />
+                    <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU"/>
                     <input
                       placeholder="Name"
                       type="text"
                       style={{ padding: "15px", margin: 5 }}
                     />
-                    <input
+                    <textarea
                       placeholder="Bio"
                       type="text"
                       style={{ padding: "30px", margin: 5 }}
@@ -213,9 +213,13 @@ function Profile({ currentUser }) {
   );
 }
 
-function TweetTab() {
-  const { feedTweets } = useFeed();
-  return <TweetList feedTweets={feedTweets} />;
+function TweetTab({userId}) {
+  const { profileTweets } = useProfile(userId);
+  if(profileTweets.length === 0){
+    return(<div>NO TWEETS YET</div>)
+  }
+  
+  return <TweetList feedTweets={profileTweets} />;
 }
 
 export default Profile;

@@ -1,17 +1,15 @@
 .postDetails {
     display: flex;
-    /* flex-direction: column; */
+    flex-direction: column;
     align-items: flex-start;
-    border-bottom: 1px solid var(--twitter-background);
+    /* border-bottom: 1px solid var(--twitter-background); */
     padding-bottom: 10px;
-    min-width: fit-content;
     flex: 0.6;
 }
 
 .postDetails__body {
-    flex: 1;
     padding: 10px;
-    border-bottom: 8px solid var(--twitter-background);
+    border-bottom: 1px solid var(--twitter-background);
 }
 
 .postDetails__body > img {
@@ -42,7 +40,6 @@
 
 .postDetails__header{
     display: flex;
-    flex-direction: column;
     align-items: center;
 }
 
@@ -53,10 +50,12 @@
 
 .postDetails__headerText{
     display: flex;
+    flex-direction: column;
+    padding: 10px;
 }
 
 .postDetails__headerText > h3 {
-    font-size: 15px;
+    font-size: 20px;
     margin-bottom: 5px;
     font-weight: 700;
 }
@@ -73,5 +72,5 @@
 }
 
 .postDetails__avatar {
-    padding-left: 10px;
+    padding-left: 0px;
 }

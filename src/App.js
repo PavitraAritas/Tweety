@@ -8,7 +8,7 @@ import Profile from "./Pages/Profile/Profile";
 import Auth from "./Pages/Auth/Auth";
 import { IsUserRedirect, ProtectedRoute } from "./Helpers/Routes";
 import useAuthListener from "./hooks/userAuth";
-import ProfileDetails from "./Components/Post/PostDetail/PostDetail"
+import PostDetail from "./Components/Post/PostDetail/PostDetail";
 
 function App() {
   const { user } = useAuthListener();
@@ -22,13 +22,20 @@ function App() {
           <Fragment>
             <div className="app">
               <Sidebar />
-              <Route path="/" exact><Feed currentUser={user}/></Route>
+              <Route path="/" exact>
+                <Feed currentUser={user} />
+              </Route>
+              <Route path="/comments" exact>
+                <PostDetail currentUser={user} />
+              </Route>
               <Route path="/explore" />
               <Route path="/notifications">Notifications</Route>
               <Route path="/messages">Messages</Route>
               <Route path="/bookmarks">Bookmarks</Route>
               <Route path="/lists">Lists</Route>
-              <Route path="/profile"><Profile currentUser={user}/></Route>
+              <Route path="/profile">
+                <Profile currentUser={user} />
+              </Route>
               <Widgets />
             </div>
           </Fragment>

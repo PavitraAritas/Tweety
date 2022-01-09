@@ -2,15 +2,21 @@ import { db, auth, storage } from "./firebase";
 import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 
-function fetchTweets() {
-  let tweets = [];
-  db.collection("posts")
-    .orderBy("timestamp", "desc")
-    .onSnapshot((snapshot) =>
-      snapshot.docs.map((doc) => tweets.push(doc.data()))
-    );
+async function fetchProfileTweets(userId) {
+  try{
 
-  return tweets;
+    let tweets = await db
+      .collection("tweets")
+      .where("userId", "==", userId)
+      .orderBy("timestamp", "desc")
+      .get();
+
+      console.log(tweets.docs);
+    return tweets;
+  }catch(error){
+    console.log(error)
+    alert(error.message);
+  }
 }
 
 async function sendTweet(
@@ -30,17 +36,20 @@ async function sendTweet(
   if (!imageURL) {
     imageURL = "";
   }
-  await db.collection("tweets").doc(tweetId).set({
-    tweetId: tweetId,
-    displayName: name,
-    userName: userName,
-    verified: true,
-    text: tweetMessage,
-    image: imageURL,
-    avatar: avatar,
-    userId: userId,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-  });
+  await db
+    .collection("tweets")
+    .doc(tweetId)
+    .set({
+      tweetId: tweetId,
+      displayName: name,
+      userName: userName,
+      verified: true,
+      text: tweetMessage,
+      image: imageURL,
+      avatar: avatar ?? "",
+      userId: userId,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+    });
 }
 
 async function signUp(email, username, password, name) {
@@ -70,14 +79,13 @@ async function handleUpload(image) {
   }
 }
 
-async function createProfile(username, email, name, userId, avatar) {
+async function createProfile(username, email, name, userId) {
   try {
     let self = await db.collection("users").doc(userId).set({
       userId: userId,
       name: name,
       userName: username,
       email: email,
-      avatar: avatar,
       verified: true,
       joinDate: firebase.firestore.FieldValue.serverTimestamp(),
     });
@@ -100,11 +108,19 @@ async function getUser(userId) {
   }
 }
 
-async function tweetComment(comment, username, tweetId, avatar, name, userId) {
+async function tweetComment(
+  comment,
+  username,
+  tweetId,
+  avatar,
+  name,
+  userId,
+  verified
+) {
   try {
     let commentId = uuidv4();
     await db
-      .collection("tweetCollection")
+      .collection("tweets")
       .doc(tweetId)
       .collection("comments")
       .doc(commentId)
@@ -112,9 +128,10 @@ async function tweetComment(comment, username, tweetId, avatar, name, userId) {
         text: comment,
         userName: username,
         commentId: commentId,
-        avatar: avatar,
+        avatar: avatar ?? "",
         displayName: name,
         userId: userId,
+        verified: verified,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
   } catch (error) {
@@ -123,7 +140,7 @@ async function tweetComment(comment, username, tweetId, avatar, name, userId) {
 }
 
 export {
-  fetchTweets,
+  fetchProfileTweets,
   sendTweet,
   signUp,
   signIn,

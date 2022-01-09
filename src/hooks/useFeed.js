@@ -9,7 +9,7 @@ export default function useFeed() {
 
   useEffect(() => {
 
-    firebase.db.collection("posts")
+    firebase.db.collection("tweets")
     .orderBy("timestamp", "desc")
     .onSnapshot((snapshot) => setFeedTweets(snapshot.docs.map((doc) => doc.data())));
 

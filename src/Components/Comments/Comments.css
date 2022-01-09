@@ -32,13 +32,13 @@
     margin-left: 20px;
 }
 
-.post {
+/* .post {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     border-bottom: 1px solid var(--twitter-background);
     padding-bottom: 10px;
-}
+} */
 
 /* .post__body {
     flex: 1;

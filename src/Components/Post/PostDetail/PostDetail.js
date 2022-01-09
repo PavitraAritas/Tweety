@@ -1,81 +1,141 @@
-import { Avatar } from "@material-ui/core";
-import React from "react";
+import { Avatar, Button } from "@material-ui/core";
+import React, { useState, useContext } from "react";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import ChatBubbleOutlineIcon from "@material-ui/icons/ChatBubbleOutline";
 import RepeatIcon from "@material-ui/icons/Repeat";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
 import "./PostDetails.css";
-import Comments from "../../../Pages/Comments/Comments";
-import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { useLocation } from "react-router-dom";
+import moment from "moment-timezone";
+import useProfile from "../../../hooks/useProfile";
+import RepositoryContext from "../../../Context/RepositoryContext";
+import AddPhotoAlternateOutlinedIcon from "@material-ui/icons/AddPhotoAlternateOutlined";
+import GifIcon from "@material-ui/icons/Gif";
+import BarChartIcon from "@material-ui/icons/BarChart";
+import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfiedOutlined";
+import ScheduleOutlinedIcon from "@material-ui/icons/ScheduleOutlined";
+import "../../Comments/Comments.css";
+import Comments from "../../Comments/Comments"
 
-const PostDetail = ({
-  displayName,
-  userName,
-  timestamp,
-  verified,
-  avatar,
-  text,
-  image,
-}) => {
+const PostDetail = ({ currentUser }) => {
+  const [comment, setComment] = useState("");
+  const { user } = useProfile(currentUser.uid);
+  const { repository } = useContext(RepositoryContext);
+  const data = useLocation();
+  const tweet = data.state;
+  let date = moment(tweet.timeStamp).format("hh a. MMM D, YYYY");
+
+  function sendComment() {
+    if (comment.length > 0) {
+      repository.tweetComment(
+        comment,
+        user.userName,
+        tweet.tweetId,
+        user.avatar,
+        user.name,
+        user.userId,
+        tweet.verified
+      );
+    }
+    setComment("");
+  }
+
   return (
+    <div>
     <div className="postDetails">
       <div>
-      <div className="postDetails__body">
-      <div className="postDetails__stickyHeader">
-        <ArrowBackIcon/>
-        <div
-          style={{
-            fontSize: "18px",
-            fontWeight: "bold",
-            paddingBottom: "2px",
-            paddingLeft: "10px",
-          }}
-        >
-          Crazy
-        </div>
-      </div>
-        <div className="postDetails__header">
-          <div className="postDetails__avatar">
-            <Avatar src={avatar} />
-          </div>
-          <div className="postDetails__headerText">
-            <h3>
-              Pavitra Aritas
-              <div className="postDetails__headerSpecial">
-                {verified && <VerifiedUserIcon className="postDetails__badge" />} @
-                pavi_aritas
-              </div>
-            </h3>
+        <div className="postDetails__stickyHeader">
+          <ArrowBackIcon />
+          <div
+            style={{
+              fontSize: "18px",
+              fontWeight: "bold",
+              paddingBottom: "2px",
+              paddingLeft: "10px",
+            }}
+          >
+            Tweet
           </div>
         </div>
-        <div className="postDetails__headerDescription">
-          <p>Man oh Man of my bestfriend</p>
-        </div>
-        <img
-          src="https://i.pinimg.com/originals/ae/41/e1/ae41e1bd7b07b5a3bd3f81ffbf1d1920.gif" // {image && image.length > 0 && (
-          alt=""
-          style={{
-            height: "400px",
-            width: "600px",
-            margin: "0px",
-            alignSelf: "center",
-            borderRadius: "20px",
-            objectFit: "cover",
-          }}
-        />
-         <div className="postDetails__headerSpecial" style={{padding: "10px"}}>
-                {verified && <VerifiedUserIcon className="postDetails__badge" />} 9pm . 17 July 2021 . Buffer
-              </div>
-        <div className="postDetails__footer">
-          <ChatBubbleOutlineIcon fontSize="small" />
-          <RepeatIcon fontSize="small" />
-          <FavoriteBorderIcon fontSize="small" className="postDetails__foot" />
-          <PublishRoundedIcon fontSize="small" />
+        <div className="postDetails__body">
+          <div className="postDetails__header">
+            <div className="postDetails__avatar">
+              <Avatar src={tweet.avatar} />
+            </div>
+            <div className="postDetails__headerText">
+              <h3>
+                {tweet.displayName}{" "}
+                {tweet.verified && (
+                  <VerifiedUserIcon className="postDetails__badge" />
+                )}
+                <div className="postDetails__headerSpecial">
+                  @{tweet.userName}
+                </div>
+              </h3>
+            </div>
+          </div>
+          <div className="postDetails__headerDescription">
+            <p>{tweet.text}</p>
+          </div>
+          {tweet.image && tweet.image.length > 0 && (
+            <img
+              src={tweet.image} // {image && image.length > 0 && (
+              alt=""
+              style={{
+                height: "400px",
+                width: "600px",
+                margin: "0px",
+                alignSelf: "center",
+                borderRadius: "20px",
+                objectFit: "cover",
+              }}
+            />
+          )}
+          <div
+            className="postDetails__headerSpecial"
+            style={{ padding: "10px" }}
+          >
+            {tweet.verified && (
+              <VerifiedUserIcon className="postDetails__badge" />
+            )}
+            {date}
+          </div>
+          <div className="postDetails__footer">
+            <ChatBubbleOutlineIcon fontSize="small" />
+            <RepeatIcon fontSize="small" />
+            <FavoriteBorderIcon
+              fontSize="small"
+              className="postDetails__foot"
+            />
+            <PublishRoundedIcon fontSize="small" />
+          </div>
         </div>
       </div>
-      </div>
-      <Comments />
+      <form>
+        <div className="comment__input">
+          <Avatar src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU" />
+          <input
+            placeholder="Tweet your reply"
+            type="text"
+            onChange={(e) => setComment(e.target.value)}
+            value={comment}
+          />
+        </div>
+        <div className="comment__icons">
+          <AddPhotoAlternateOutlinedIcon />
+          <GifIcon />
+          <BarChartIcon />
+          <SentimentSatisfiedOutlinedIcon />
+          <ScheduleOutlinedIcon />
+          <Button className="comment__button" onClick={sendComment}>
+            Reply
+          </Button>
+        </div>
+      </form>
+    </div>
+    <Comments tweetId={tweet.tweetId}/>
     </div>
   );
 };
