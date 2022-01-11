@@ -43,7 +43,7 @@ const PostDetail = ({ currentUser }) => {
   }
 
   return (
-    <div>
+    <div style={{minWidth:"fit-content"}}>
     <div className="postDetails">
       <div>
         <div className="postDetails__stickyHeader">

@@ -67,9 +67,11 @@
 
 .profile__editButton {
   border: 1px solid rgb(26, 25, 25);
-  border-radius: 50px;
+  border-radius: 30px;
   padding: 10px;
   font-size: 15px;
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .profile__editButton:hover {
@@ -86,4 +88,9 @@
     border-radius: 20px;
     padding: 4px;
     position: relative;
+}
+
+.profile__closeIcon:hover{
+  background-color: rgb(199, 199, 199);
+  border-radius: 30px;
 }
