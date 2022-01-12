@@ -18,6 +18,7 @@ import SentimentSatisfiedOutlinedIcon from "@material-ui/icons/SentimentSatisfie
 import ScheduleOutlinedIcon from "@material-ui/icons/ScheduleOutlined";
 import "../../Comments/Comments.css";
 import Comments from "../../Comments/Comments"
+import { useHistory } from 'react-router-dom';
 
 const PostDetail = ({ currentUser }) => {
   const [comment, setComment] = useState("");
@@ -42,12 +43,14 @@ const PostDetail = ({ currentUser }) => {
     setComment("");
   }
 
+  const history = useHistory();
+
   return (
-    <div style={{minWidth:"fit-content"}}>
+    <div>
     <div className="postDetails">
       <div>
         <div className="postDetails__stickyHeader">
-          <ArrowBackIcon />
+          <ArrowBackIcon onClick={() => history.push('/')} />
           <div
             style={{
               fontSize: "18px",
