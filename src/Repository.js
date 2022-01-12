@@ -3,18 +3,17 @@ import firebase from "firebase";
 import { v4 as uuidv4 } from "uuid";
 
 async function fetchProfileTweets(userId) {
-  try{
-
+  try {
     let tweets = await db
       .collection("tweets")
       .where("userId", "==", userId)
       .orderBy("timestamp", "desc")
       .get();
 
-      console.log(tweets.docs);
+    console.log(tweets.docs);
     return tweets;
-  }catch(error){
-    console.log(error)
+  } catch (error) {
+    console.log(error);
     alert(error.message);
   }
 }
@@ -139,6 +138,14 @@ async function tweetComment(
   }
 }
 
+async function updateModal(user) {
+  try{
+    await db.collection("users").doc(user.userId).update(user);
+  } catch(error){
+    alert(error.message)
+  }
+}
+
 export {
   fetchProfileTweets,
   sendTweet,
@@ -148,4 +155,5 @@ export {
   signOut,
   getUser,
   tweetComment,
+  updateModal,
 };

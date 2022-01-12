@@ -1,5 +1,5 @@
 import { Avatar, Button, Modal } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 // import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
@@ -9,17 +9,20 @@ import useProfile from "../../hooks/useProfile";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@material-ui/icons/Close";
+import RepositoryContext from "../../Context/RepositoryContext";
 
 function Profile({ currentUser }) {
   const tabs = [<TweetTab userId={currentUser.uid} />];
   const [activeTab, setactiveTab] = useState(0);
   const tabLabels = ["Tweets", "Tweets & Replies", "Media", "Likes"];
-  const { user } = useProfile(currentUser.uid);
+  const { user, updateUser } = useProfile(currentUser.uid);
   const [open, setOpen] = useState(false);
+  
 
   if (user == null) {
     return <div>Loading</div>;
   }
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -28,6 +31,7 @@ function Profile({ currentUser }) {
   const handleClose = () => {
     setOpen(false);
   };
+
 
 
   return (
@@ -76,7 +80,7 @@ function Profile({ currentUser }) {
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <EditName user={user} handleClose={handleClose}/>
+              <EditName user={user} handleClose={handleClose} updateUser={updateUser}/>
             </Modal>
             </div>
           </div>
@@ -163,8 +167,26 @@ function TweetTab({ userId }) {
   return <TweetList feedTweets={profileTweets} />;
 }
 
-function EditName({user, handleClose}){
+function EditName({user, handleClose, updateUser}){
   const [editName, setEditName] = useState(user.name);
+  const {repository} = useContext(RepositoryContext);
+  const [bio, setBio] = useState(user.bio);
+  const [avatar, setAvatar] = useState(user.avatar);
+
+  const onSubmit = () => {
+    let userData = { userId: user.userId,
+      name: editName ?? user.name,
+      userName: user.userName,
+      email: user.email,
+      verified: user.verified,
+      joinDate: user.joinDate,
+    bio : bio ?? user.bio === undefined ? '' : user.bio,
+  avatar: avatar ?? user.avatar === undefined ? '' : user.avatar}
+    
+    repository.updateModal(userData);
+    updateUser(userData);
+    handleClose();
+  }
 
   const style = {
     position: "absolute",
@@ -204,7 +226,7 @@ function EditName({user, handleClose}){
         >
           <span>Edit Profile</span>
         </div>
-        <Button style={{ left: "60%", border:"1px solid black", backgroundColor: "black", color:"white", borderRadius: "30px", }}>Save</Button>
+        <Button style={{ left: "60%", border:"1px solid black", backgroundColor: "black", color:"white", borderRadius: "30px", }} onClick={onSubmit}>Save</Button>
       </div>
     </div>
     <Typography
