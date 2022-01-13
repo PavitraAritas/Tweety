@@ -16,6 +16,7 @@
   background-color: white;
   border: 1px solid var(--twitter-background);
   padding-left: 10px;
+  min-width: fit-content;
 }
 
 .profile__banner {

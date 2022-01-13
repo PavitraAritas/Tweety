@@ -138,9 +138,22 @@ async function tweetComment(
   }
 }
 
-async function updateModal(user) {
+async function updateProfile(user, avatar, banner) {
   try{
-    await db.collection("users").doc(user.userId).update(user);
+    let avatarURL, bannerURL;
+    if(avatar){
+      avatarURL = await handleUpload(avatar)
+    }
+    if(banner){
+      bannerURL = await handleUpload(banner)
+    } 
+    if(avatarURL && avatarURL.length > 0){
+      user.avatar=avatarURL
+    }
+    if(bannerURL && bannerURL.length > 0){
+      user.banner=bannerURL
+    }
+    await db.collection("users").doc(user.userId).update(user); 
   } catch(error){
     alert(error.message)
   }
@@ -155,5 +168,5 @@ export {
   signOut,
   getUser,
   tweetComment,
-  updateModal,
+  updateProfile,
 };

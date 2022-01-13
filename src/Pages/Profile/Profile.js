@@ -1,5 +1,5 @@
 import { Avatar, Button, Modal } from "@material-ui/core";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useRef } from "react";
 import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
@@ -10,6 +10,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@material-ui/icons/Close";
 import RepositoryContext from "../../Context/RepositoryContext";
+import moment from "moment-timezone";
 
 function Profile({ currentUser }) {
   const tabs = [<TweetTab userId={currentUser.uid} />];
@@ -29,6 +30,9 @@ function Profile({ currentUser }) {
   const handleClose = () => {
     setOpen(false);
   };
+
+  let date = moment(user.joinDate.toDate().toISOString()).format(" MMM D, YYYY");
+  console.log(user.banner);
 
   return (
     <div className="profile">
@@ -50,14 +54,19 @@ function Profile({ currentUser }) {
         <div className="profile__banner">
           <div>
             <div>
-              <img
-                src="https://pbs.twimg.com/profile_banners/734289142570307585/1612156103/600x200"
+              {user.banner && <img
+                src={user.banner}
                 alt="banner"
-              />
+                style={{ minWidth:"fit-content", width: "100%", height: "250px", objectFit: "cover"}}
+              />}
+              {!user.banner && <img
+                src=""
+                alt="banner"
+              />}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Avatar
-                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU"
+             {user.avatar && <Avatar
+                src={user.avatar}
                 className="profile__avatar"
                 style={{
                   width: "90px",
@@ -66,7 +75,18 @@ function Profile({ currentUser }) {
                   border: "5px solid white",
                   position: "relative",
                 }}
-              />
+              />}
+              {!user.avatar && <Avatar
+                src={user.avatar}
+                className="profile__avatar"
+                style={{
+                  width: "90px",
+                  height: "90px",
+                  borderRadius: "50px",
+                  border: "5px solid white",
+                  position: "relative",
+                }}
+              />}
               <Button class="profile__editButton" onClick={handleOpen}>
                 Edit profile
               </Button>
@@ -84,28 +104,29 @@ function Profile({ currentUser }) {
               </Modal>
             </div>
           </div>
-          <div style={{ paddingLeft: "4px" }}>
+          <div style={{ paddingLeft: "10px"}}>
             <div
               style={{
                 fontSize: "20px",
                 fontWeight: "bold",
                 display: "flex",
                 justifyContent: "space-between",
-                paddingLeft: "17px",
+                // paddingLeft: "17px",
               }}
             >
               <span>{user.name}</span>
             </div>
-          </div>
-          <div
+            <div
             style={{
               fontSize: "15px",
               color: "rgb(83, 100, 113)",
               paddingBottom: "5px",
-              paddingLeft: "20px",
+              // paddingLeft: "20px",
             }}
           >
             <span>@{user.userName}</span>
+          </div>
+          <div style={{marginTop: "8px", marginBottom: "10px"}}><span>This is my bio</span></div>
           </div>
           <div
             style={{
@@ -113,24 +134,25 @@ function Profile({ currentUser }) {
               alignItems: "center",
               color: "rgb(83, 100, 113)",
               columnGap: "4px",
-              paddingLeft: "20px",
+              paddingLeft: "6px",
+              paddingBottom: "5px"
             }}
           >
             <DateRangeRoundedIcon />
             <div style={{ fontSize: "16px" }}>
-              <span>12th june</span>
+              <span>Joined{date}</span>
             </div>
           </div>
           <div
             style={{
               display: "flex",
               flexDirection: "row",
-              columnGap: "5px",
+              columnGap: "15px",
               paddingBottom: "10px",
               padding: "5px",
               fontSize: "16px",
               color: "rgb(83, 100, 113)",
-              paddingLeft: "20px",
+              paddingLeft: "10px",
             }}
           >
             <div>
@@ -172,6 +194,60 @@ function EditName({ user, handleClose, updateUser }) {
   const { repository } = useContext(RepositoryContext);
   const [bio, setBio] = useState(user.bio);
   const [avatar, setAvatar] = useState(user.avatar);
+  const [banner, setBanner] = useState(user.banner);
+  const [preview, setPreview] = useState(null);
+
+  const hiddenFileAvatar = useRef(null);
+  const hiddenFileBanner = useRef(null);
+
+  function handleAvatarClick() {
+    hiddenFileAvatar.current.click();
+  }
+
+  function handleBannerClick() {
+    hiddenFileBanner.current.click();
+  }
+
+  function handleFileAvatar(e) {
+    e.preventDefault();
+    if (!e.target.files[0]) return;
+
+    const file = e.target.files[0];
+    setAvatar(file);
+    console.log({avatar});
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setPreview(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+
+  function handleFileBanner(e) {
+    e.preventDefault();
+    if (!e.target.files[0]) return;
+
+    const file = e.target.files[0];
+    setBanner(file);
+
+    console.log({banner});
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      if (reader.readyState === 2) {
+        setPreview(reader.result);
+      }
+    };
+    reader.readAsDataURL(e.target.files[0]);
+  }
+
+
+  function removeImage() {
+    setBanner(null);
+    setPreview(null);
+  }
 
   const onSubmit = () => {
     let userData = {
@@ -183,11 +259,12 @@ function EditName({ user, handleClose, updateUser }) {
       joinDate: user.joinDate,
       bio: bio ?? user.bio === undefined ? "" : user.bio,
       avatar: avatar ?? user.avatar === undefined ? "" : user.avatar,
+      banner: banner ?? user.banner === undefined ? "" : user.banner,
     };
-
-    repository.updateModal(userData);
+    repository.updateProfile(userData, avatar, banner);
     updateUser(userData);
     handleClose();
+    removeImage();
   };
 
   const style = {
@@ -262,6 +339,13 @@ function EditName({ user, handleClose, updateUser }) {
             alt="banner"
             style={{ opacity: "0.7", width: "579px"}}
           />
+          <input
+          style={{ display: "none" }}
+          onChange={handleFileBanner}
+          ref={hiddenFileBanner}
+          type="file"
+          alt="uploadImage"
+        />
           <AddAPhotoOutlinedIcon
             style={{
               position: "absolute",
@@ -269,11 +353,12 @@ function EditName({ user, handleClose, updateUser }) {
               top: "45%",
               left: "50%",
             }}
+            onClick={handleBannerClick}
           />
         </div>
         <div style={{ position: "relative" }}>
           <Avatar
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRX_7UnLSQ6Y5O20pzNU2mj4OKScxDoTfpKPg&usqp=CAU"
+            src={user.avatar}
             style={{
               width: "65px",
               height: "65px",
@@ -281,6 +366,13 @@ function EditName({ user, handleClose, updateUser }) {
               opacity: "0.78",
             }}
           />
+          <input
+          style={{ display: "none" }}
+          onChange={handleFileAvatar}
+          ref={hiddenFileAvatar}
+          type="file"
+          alt="uploadImage"
+        />
           <AddAPhotoOutlinedIcon
             style={{
               position: "absolute",
@@ -288,6 +380,7 @@ function EditName({ user, handleClose, updateUser }) {
               top: "30px",
               left: "5%",
             }}
+            onClick={handleAvatarClick} 
           />
         </div>
         <input
