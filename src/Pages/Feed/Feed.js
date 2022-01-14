@@ -29,7 +29,8 @@ function Feed({ currentUser }) {
             user.userName,
             user.name,
             user.userId,
-            user.avatar
+            user.avatar,
+            {}
           )
         }
       />

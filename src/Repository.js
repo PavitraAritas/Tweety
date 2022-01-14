@@ -24,7 +24,8 @@ async function sendTweet(
   userName,
   name,
   userId,
-  avatar
+  avatar,
+  likes
 ) {
   let tweetId = uuidv4();
   console.log("send tweet called");
@@ -48,6 +49,7 @@ async function sendTweet(
       avatar: avatar ?? "",
       userId: userId,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      likes: likes
     });
 }
 
@@ -159,6 +161,14 @@ async function updateProfile(user, avatar, banner) {
   }
 }
 
+async function updateLikes(tweetId, likes){
+  try{
+    await db.collection("tweets").doc(tweetId).update({likes:likes})
+  }catch(error){
+    alert(error.message)
+  }
+}
+
 export {
   fetchProfileTweets,
   sendTweet,
@@ -169,4 +179,5 @@ export {
   getUser,
   tweetComment,
   updateProfile,
+  updateLikes
 };

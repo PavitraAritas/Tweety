@@ -4,7 +4,6 @@ import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
 import TweetList from "../../Components/TweetList/TweetList";
-import useFeed from "../../hooks/useFeed";
 import useProfile from "../../hooks/useProfile";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -31,8 +30,9 @@ function Profile({ currentUser }) {
     setOpen(false);
   };
 
-  let date = moment(user.joinDate.toDate().toISOString()).format(" MMM D, YYYY");
-  console.log(user.banner);
+  let date = moment(user.joinDate.toDate().toISOString()).format(
+    " MMM D, YYYY"
+  );
 
   return (
     <div className="profile">
@@ -54,39 +54,58 @@ function Profile({ currentUser }) {
         <div className="profile__banner">
           <div>
             <div>
-              {user.banner && <img
-                src={user.banner}
-                alt="banner"
-                style={{ minWidth:"fit-content", width: "100%", height: "250px", objectFit: "cover"}}
-              />}
-              {!user.banner && <img
-                src=""
-                alt="banner"
-              />}
+              {user.banner && (
+                <img
+                  src={user.banner}
+                  alt="banner"
+                  style={{
+                    minWidth: "fit-content",
+                    width: "100%",
+                    height: "250px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
+              {!user.banner && (
+                <img
+                  src="https://image.freepik.com/free-vector/elegant-white-background-with-shiny-lines_1017-17580.jpg"
+                  alt="banner"
+                  style={{
+                    minWidth: "fit-content",
+                    width: "100%",
+                    height: "250px",
+                    objectFit: "cover",
+                  }}
+                />
+              )}
             </div>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-             {user.avatar && <Avatar
-                src={user.avatar}
-                className="profile__avatar"
-                style={{
-                  width: "90px",
-                  height: "90px",
-                  borderRadius: "50px",
-                  border: "5px solid white",
-                  position: "relative",
-                }}
-              />}
-              {!user.avatar && <Avatar
-                src={user.avatar}
-                className="profile__avatar"
-                style={{
-                  width: "90px",
-                  height: "90px",
-                  borderRadius: "50px",
-                  border: "5px solid white",
-                  position: "relative",
-                }}
-              />}
+              {user.avatar && (
+                <Avatar
+                  src={user.avatar}
+                  className="profile__avatar"
+                  style={{
+                    width: "90px",
+                    height: "90px",
+                    borderRadius: "50px",
+                    border: "5px solid white",
+                    position: "relative",
+                  }}
+                />
+              )}
+              {!user.avatar && (
+                <Avatar
+                  src={user.avatar}
+                  className="profile__avatar"
+                  style={{
+                    width: "90px",
+                    height: "90px",
+                    borderRadius: "50px",
+                    border: "5px solid white",
+                    position: "relative",
+                  }}
+                />
+              )}
               <Button class="profile__editButton" onClick={handleOpen}>
                 Edit profile
               </Button>
@@ -104,7 +123,7 @@ function Profile({ currentUser }) {
               </Modal>
             </div>
           </div>
-          <div style={{ paddingLeft: "10px"}}>
+          <div style={{ paddingLeft: "10px" }}>
             <div
               style={{
                 fontSize: "20px",
@@ -117,16 +136,18 @@ function Profile({ currentUser }) {
               <span>{user.name}</span>
             </div>
             <div
-            style={{
-              fontSize: "15px",
-              color: "rgb(83, 100, 113)",
-              paddingBottom: "5px",
-              // paddingLeft: "20px",
-            }}
-          >
-            <span>@{user.userName}</span>
-          </div>
-          <div style={{marginTop: "8px", marginBottom: "10px"}}><span>This is my bio</span></div>
+              style={{
+                fontSize: "15px",
+                color: "rgb(83, 100, 113)",
+                paddingBottom: "5px",
+                // paddingLeft: "20px",
+              }}
+            >
+              <span>@{user.userName}</span>
+            </div>
+            <div style={{ marginTop: "8px", marginBottom: "10px" }}>
+              <span>{user.bio}</span>
+            </div>
           </div>
           <div
             style={{
@@ -135,7 +156,7 @@ function Profile({ currentUser }) {
               color: "rgb(83, 100, 113)",
               columnGap: "4px",
               paddingLeft: "6px",
-              paddingBottom: "5px"
+              paddingBottom: "5px",
             }}
           >
             <DateRangeRoundedIcon />
@@ -193,8 +214,8 @@ function EditName({ user, handleClose, updateUser }) {
   const [editName, setEditName] = useState(user.name);
   const { repository } = useContext(RepositoryContext);
   const [bio, setBio] = useState(user.bio);
-  const [avatar, setAvatar] = useState(user.avatar);
-  const [banner, setBanner] = useState(user.banner);
+  const [avatar, setAvatar] = useState(null);
+  const [banner, setBanner] = useState(null);
   const [preview, setPreview] = useState(null);
 
   const hiddenFileAvatar = useRef(null);
@@ -214,7 +235,7 @@ function EditName({ user, handleClose, updateUser }) {
 
     const file = e.target.files[0];
     setAvatar(file);
-    console.log({avatar});
+    console.log({ avatar });
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -232,7 +253,7 @@ function EditName({ user, handleClose, updateUser }) {
     const file = e.target.files[0];
     setBanner(file);
 
-    console.log({banner});
+    console.log({ banner });
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -242,7 +263,6 @@ function EditName({ user, handleClose, updateUser }) {
     };
     reader.readAsDataURL(e.target.files[0]);
   }
-
 
   function removeImage() {
     setBanner(null);
@@ -261,7 +281,8 @@ function EditName({ user, handleClose, updateUser }) {
       avatar: avatar ?? user.avatar === undefined ? "" : user.avatar,
       banner: banner ?? user.banner === undefined ? "" : user.banner,
     };
-    repository.updateProfile(userData, avatar, banner);
+    console.log({userData})
+    // repository.updateProfile(userData, avatar, banner);
     updateUser(userData);
     handleClose();
     removeImage();
@@ -335,17 +356,20 @@ function EditName({ user, handleClose, updateUser }) {
       >
         <div style={{ position: "relative" }}>
           <img
-            src="https://pbs.twimg.com/profile_banners/734289142570307585/1612156103/600x200"
+            src={
+              user.banner ??
+              "https://image.freepik.com/free-vector/elegant-white-background-with-shiny-lines_1017-17580.jpg"
+            }
             alt="banner"
-            style={{ opacity: "0.7", width: "579px"}}
+            style={{ opacity: "0.7", width: "579px" , height: '120px'}}
           />
           <input
-          style={{ display: "none" }}
-          onChange={handleFileBanner}
-          ref={hiddenFileBanner}
-          type="file"
-          alt="uploadImage"
-        />
+            style={{ display: "none" }}
+            onChange={handleFileBanner}
+            ref={hiddenFileBanner}
+            type="file"
+            alt="uploadImage"
+          />
           <AddAPhotoOutlinedIcon
             style={{
               position: "absolute",
@@ -367,12 +391,12 @@ function EditName({ user, handleClose, updateUser }) {
             }}
           />
           <input
-          style={{ display: "none" }}
-          onChange={handleFileAvatar}
-          ref={hiddenFileAvatar}
-          type="file"
-          alt="uploadImage"
-        />
+            style={{ display: "none" }}
+            onChange={handleFileAvatar}
+            ref={hiddenFileAvatar}
+            type="file"
+            alt="uploadImage"
+          />
           <AddAPhotoOutlinedIcon
             style={{
               position: "absolute",
@@ -380,7 +404,7 @@ function EditName({ user, handleClose, updateUser }) {
               top: "30px",
               left: "5%",
             }}
-            onClick={handleAvatarClick} 
+            onClick={handleAvatarClick}
           />
         </div>
         <input
@@ -398,6 +422,8 @@ function EditName({ user, handleClose, updateUser }) {
         <textarea
           placeholder="Bio"
           type="text"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
           style={{
             padding: "30px",
             margin: 5,

@@ -1,4 +1,3 @@
-import { Avatar, Button } from "@material-ui/core";
 import React from "react";
 import "./Comments.css";
 import Post from "../Post/Post";

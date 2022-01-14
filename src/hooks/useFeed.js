@@ -15,6 +15,9 @@ export default function useFeed() {
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+  // function updateFeedTweetLikes(){
+  //   feedTweets.map((tweet) => tweet.)
+  // }
 
   return {feedTweets};
 }
