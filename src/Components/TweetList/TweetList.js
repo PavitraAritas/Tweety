@@ -13,6 +13,7 @@ function TweetList({ feedTweets, user }) {
           <Post
             key={post.tweetId}
             likes={post.likes}
+            isLiked={post.likes[user.uid] === true}
             user={user}
             displayName={post.displayName}
             userName={post.userName}
@@ -20,6 +21,7 @@ function TweetList({ feedTweets, user }) {
             text={post.text}
             avatar={post.avatar}
             image={post.image}
+            comments={post.comments}
             tweetId={post.tweetId}
             timestamp={
               post.timestamp ? post.timestamp.toDate().toISOString() : ""

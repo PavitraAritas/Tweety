@@ -1,5 +1,5 @@
 import { Avatar, Button, Modal } from "@material-ui/core";
-import React, { useState, useContext, useRef } from "react";
+import React, { useState, useRef } from "react";
 import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
@@ -8,11 +8,11 @@ import useProfile from "../../hooks/useProfile";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-import RepositoryContext from "../../Context/RepositoryContext";
+// import RepositoryContext from "../../Context/RepositoryContext";
 import moment from "moment-timezone";
 
 function Profile({ currentUser }) {
-  const tabs = [<TweetTab userId={currentUser.uid} />];
+  const tabs = [<TweetTab currentUser={currentUser} />];
   const [activeTab, setactiveTab] = useState(0);
   const tabLabels = ["Tweets", "Tweets & Replies", "Media", "Likes"];
   const { user, updateUser } = useProfile(currentUser.uid);
@@ -59,8 +59,8 @@ function Profile({ currentUser }) {
                   src={user.banner}
                   alt="banner"
                   style={{
-                    minWidth: "fit-content",
-                    width: "100%",
+                    // minWidth: "fit-content",
+                    width: "600px",
                     height: "250px",
                     objectFit: "cover",
                   }}
@@ -72,7 +72,7 @@ function Profile({ currentUser }) {
                   alt="banner"
                   style={{
                     minWidth: "fit-content",
-                    width: "100%",
+                    width: "600px",
                     height: "250px",
                     objectFit: "cover",
                   }}
@@ -201,18 +201,18 @@ function Profile({ currentUser }) {
   );
 }
 
-function TweetTab({ userId }) {
-  const { profileTweets } = useProfile(userId);
+function TweetTab({ currentUser}) {
+  const { profileTweets } = useProfile(currentUser.uid);
   if (profileTweets.length === 0) {
     return <div>NO TWEETS YET</div>;
   }
 
-  return <TweetList feedTweets={profileTweets} />;
+  return <TweetList feedTweets={profileTweets} user = {currentUser} />;
 }
 
 function EditName({ user, handleClose, updateUser }) {
   const [editName, setEditName] = useState(user.name);
-  const { repository } = useContext(RepositoryContext);
+  // const { repository } = useContext(RepositoryContext);
   const [bio, setBio] = useState(user.bio);
   const [avatar, setAvatar] = useState(null);
   const [banner, setBanner] = useState(null);
@@ -361,7 +361,7 @@ function EditName({ user, handleClose, updateUser }) {
               "https://image.freepik.com/free-vector/elegant-white-background-with-shiny-lines_1017-17580.jpg"
             }
             alt="banner"
-            style={{ opacity: "0.7", width: "579px" , height: '120px'}}
+            style={{ opacity: "0.7", width: "100%" , height: '50%'}}
           />
           <input
             style={{ display: "none" }}

@@ -48,6 +48,7 @@ async function sendTweet(
       image: imageURL,
       avatar: avatar ?? "",
       userId: userId,
+      comments: 0,
       timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       likes: likes
     });
@@ -116,7 +117,8 @@ async function tweetComment(
   avatar,
   name,
   userId,
-  verified
+  verified,
+  count,
 ) {
   try {
     let commentId = uuidv4();
@@ -133,8 +135,14 @@ async function tweetComment(
         displayName: name,
         userId: userId,
         verified: verified,
+        comments: 0,
+        likes: {},
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       });
+      await db
+      .collection("tweets")
+      .doc(tweetId)
+      .set({comments : count+1}, {merge: true})
   } catch (error) {
     alert(error.message);
   }

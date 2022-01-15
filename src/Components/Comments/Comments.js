@@ -24,6 +24,7 @@ function Comments({tweetId}) {
         avatar={c.avatar}
         image={c.image}
         tweetId={c.tweetId}
+        likes={c.likes}
         timestamp={c.timestamp ? c.timestamp.toDate().toISOString() : ""}
       />
     ))}

@@ -37,7 +37,8 @@ const PostDetail = ({ currentUser }) => {
         user.avatar,
         user.name,
         user.userId,
-        tweet.verified
+        tweet.verified,
+        tweet.comments
       );
     }
     setComment("");

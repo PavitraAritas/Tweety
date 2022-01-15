@@ -37,7 +37,7 @@
   padding-right: 50px;
 }
 
-.post__foot:hover{
+.post__favoriteIcon:hover{
     color:rgb(248, 37, 167);
     background-color: rgb(219, 172, 204);
     border-radius: 50px;

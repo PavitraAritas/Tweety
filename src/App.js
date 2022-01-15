@@ -25,7 +25,7 @@ function App() {
               <Route path="/" exact>
                 <Feed currentUser={user} />
               </Route>
-              <Route path="/comments" exact>
+              <Route path="/comments">
                 <PostDetail currentUser={user} />
               </Route>
               <Route path="/explore" />
