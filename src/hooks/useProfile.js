@@ -10,7 +10,6 @@ export default function useProfile(userId) {
     const fetchUser = async () => {
       let userDoc = await repository.getUser(userId);
       let getTweets = await repository.fetchProfileTweets(userId);
-      console.log(userDoc);
       setUser(userDoc);
       setprofileTweets(getTweets.docs.map((doc) => doc.data()));
     };

@@ -1,5 +1,5 @@
 import { Avatar, Button, Modal } from "@material-ui/core";
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useContext } from "react";
 import "./Profile.css";
 import DateRangeRoundedIcon from "@material-ui/icons/DateRangeRounded";
 import AddAPhotoOutlinedIcon from "@material-ui/icons/AddAPhotoOutlined";
@@ -8,7 +8,7 @@ import useProfile from "../../hooks/useProfile";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@material-ui/icons/Close";
-// import RepositoryContext from "../../Context/RepositoryContext";
+import RepositoryContext from "../../Context/RepositoryContext";
 import moment from "moment-timezone";
 
 function Profile({ currentUser }) {
@@ -201,18 +201,18 @@ function Profile({ currentUser }) {
   );
 }
 
-function TweetTab({ currentUser}) {
+function TweetTab({ currentUser }) {
   const { profileTweets } = useProfile(currentUser.uid);
   if (profileTweets.length === 0) {
     return <div>NO TWEETS YET</div>;
   }
 
-  return <TweetList feedTweets={profileTweets} user = {currentUser} />;
+  return <TweetList feedTweets={profileTweets} user={currentUser} />;
 }
 
 function EditName({ user, handleClose, updateUser }) {
   const [editName, setEditName] = useState(user.name);
-  // const { repository } = useContext(RepositoryContext);
+  const { repository } = useContext(RepositoryContext);
   const [bio, setBio] = useState(user.bio);
   const [avatar, setAvatar] = useState(null);
   const [banner, setBanner] = useState(null);
@@ -235,7 +235,6 @@ function EditName({ user, handleClose, updateUser }) {
 
     const file = e.target.files[0];
     setAvatar(file);
-    console.log({ avatar });
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -252,8 +251,6 @@ function EditName({ user, handleClose, updateUser }) {
 
     const file = e.target.files[0];
     setBanner(file);
-
-    console.log({ banner });
 
     const reader = new FileReader();
     reader.onload = () => {
@@ -281,8 +278,7 @@ function EditName({ user, handleClose, updateUser }) {
       avatar: avatar ?? user.avatar === undefined ? "" : user.avatar,
       banner: banner ?? user.banner === undefined ? "" : user.banner,
     };
-    console.log({userData})
-    // repository.updateProfile(userData, avatar, banner);
+    repository.updateProfile(userData, avatar, banner);
     updateUser(userData);
     handleClose();
     removeImage();
@@ -361,7 +357,7 @@ function EditName({ user, handleClose, updateUser }) {
               "https://image.freepik.com/free-vector/elegant-white-background-with-shiny-lines_1017-17580.jpg"
             }
             alt="banner"
-            style={{ opacity: "0.7", width: "100%" , height: '50%'}}
+            style={{ opacity: "0.7", width: "100%", height: "50%" }}
           />
           <input
             style={{ display: "none" }}

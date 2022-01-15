@@ -21,9 +21,6 @@ function Auth() {
         }
     }
 
-
-
-    console.log('hare raam', email, password)
     return (
         <div className='auth'>
             <div style={{flex: 1, backgroundColor: 'red'}}><img src="https://abs.twimg.com/sticky/illustrations/lohp_en_1302x955.png" alt="twitter" style={{height: '100vh'}}/></div>

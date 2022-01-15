@@ -10,7 +10,7 @@ async function fetchProfileTweets(userId) {
       .orderBy("timestamp", "desc")
       .get();
 
-    console.log(tweets.docs);
+    
     return tweets;
   } catch (error) {
     console.log(error);
@@ -28,7 +28,6 @@ async function sendTweet(
   likes
 ) {
   let tweetId = uuidv4();
-  console.log("send tweet called");
   let imageURL;
   if (tweetImage) {
     imageURL = await handleUpload(tweetImage);
@@ -57,7 +56,6 @@ async function sendTweet(
 async function signUp(email, username, password, name) {
   try {
     const authUser = await auth.createUserWithEmailAndPassword(email, password);
-    console.log(authUser);
     await createProfile(username, email, name, authUser.user.uid);
   } catch (error) {
     alert(error.message);
@@ -74,7 +72,6 @@ async function handleUpload(image) {
   try {
     const uploadTask = await storage.ref(`images/${image.name}`).put(image);
     let imageUrl = await uploadTask.ref.getDownloadURL();
-    console.log(image, imageUrl);
     return imageUrl;
   } catch (e) {
     console.log(e);
@@ -83,7 +80,7 @@ async function handleUpload(image) {
 
 async function createProfile(username, email, name, userId) {
   try {
-    let self = await db.collection("users").doc(userId).set({
+   await db.collection("users").doc(userId).set({
       userId: userId,
       name: name,
       userName: username,
@@ -91,7 +88,6 @@ async function createProfile(username, email, name, userId) {
       verified: true,
       joinDate: firebase.firestore.FieldValue.serverTimestamp(),
     });
-    console.log("user collection", self);
   } catch (error) {
     alert(error.message);
   }

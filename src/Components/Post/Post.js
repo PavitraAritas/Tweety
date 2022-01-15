@@ -7,7 +7,7 @@ import RepeatIcon from "@material-ui/icons/Repeat";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import PublishRoundedIcon from "@material-ui/icons/PublishRounded";
 import "./Post.css";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import RepositoryContext from "../../Context/RepositoryContext";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
